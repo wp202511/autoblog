@@ -1,0 +1,35 @@
+name: Generate Shopify Blogs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *' # every 2 hours
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Make secrets available to all steps
+    env:
+      SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+      SHOPIFY_ADMIN_API: ${{ secrets.SHOPIFY_ADMIN_API }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Sanity check: do NOT print secret values, only presence
+      - name: Confirm required env vars are present
+        run: |
+          [ -n "$SHOPIFY_STORE" ] && echo "✔ SHOPIFY_STORE present" || (echo "✘ SHOPIFY_STORE missing"; exit 1)
+          [ -n "$SHOPIFY_ADMIN_API" ] && echo "✔ SHOPIFY_ADMIN_API present" || (echo "✘ SHOPIFY_ADMIN_API missing"; exit 1)
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run blog generator
+        run: node generate-blogs.js
