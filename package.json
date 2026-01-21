@@ -1,0 +1,13 @@
+{
+  "name": "blog-generator",
+  "version": "1.0.0",
+  "description": "Auto-generate blog posts using Replicate API and RSS feeds",
+  "main": "generate-blogs.js",
+  "scripts": {
+    "start": "node generate-blogs.js"
+  },
+  "dependencies": {
+    "rss-parser": "^3.12.0",
+    "node-fetch": "^2.6.7"
+  }
+}
